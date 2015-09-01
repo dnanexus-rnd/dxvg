@@ -24,7 +24,7 @@
     {
       "name": "vg_exe",
       "class": "file",
-      "patterns": ["vg-exe-*.gz"]
+      "type": "vg_exe"
     }
   ],
   "runSpec": {
@@ -32,6 +32,7 @@
     "file": "src/vg_exe_builder.sh",
     "execDepends": [
       {"name": "samtools"},
+      {"name": "tabix"},
       {"name": "protobuf-compiler"},
       {"name": "libprotoc-dev"},
       {"name": "libjansson-dev"},
