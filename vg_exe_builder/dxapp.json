@@ -1,0 +1,53 @@
+{
+  "name": "vg_exe_builder",
+  "title": "vg_exe_builder",
+  "summary": "vg_exe_builder",
+  "dxapi": "1.0.0",
+  "version": "0.0.1",
+  "inputSpec": [
+    {
+      "name": "git_commit",
+      "label": "Git Commit/Ref",
+      "class": "string",
+      "optional": true,
+      "default": "master"
+    },
+    {
+      "name": "git_url",
+      "label": "Git Repo URL",
+      "class": "string",
+      "optional": true,
+      "default": "https://github.com/ekg/vg.git"
+    }
+  ],
+  "outputSpec": [
+    {
+      "name": "vg_exe",
+      "class": "file",
+      "patterns": ["vg-exe-*.gz"]
+    }
+  ],
+  "runSpec": {
+    "interpreter": "bash",
+    "file": "src/vg_exe_builder.sh",
+    "execDepends": [
+      {"name": "samtools"},
+      {"name": "protobuf-compiler"},
+      {"name": "libprotoc-dev"},
+      {"name": "libjansson-dev"},
+      {"name": "automake"},
+      {"name": "libtool"},
+      {"name": "libncurses-dev"},
+      {"name": "libbz2-dev"}
+    ],
+    "systemRequirements": {
+      "main": {
+        "instanceType": "mem2_ssd1_x2"
+      }
+    }
+  },
+  "access": {
+    "network": ["*"]
+  },
+  "authorizedUsers": []
+}
