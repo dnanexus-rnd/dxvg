@@ -53,7 +53,7 @@
   ],
   "runSpec": {
     "interpreter": "bash",
-    "file": "src/vg_construct.sh",
+    "file": "src/code.sh",
     "execDepends": [{"name": "libjansson4"}],
     "systemRequirements": {
       "main": {
