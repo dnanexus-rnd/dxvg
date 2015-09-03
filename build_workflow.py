@@ -87,25 +87,21 @@ def build_workflow(project, folder, find_applet, find_asset):
                              properties={"git_revision": git_revision})
 
     construct_applet = find_applet("vg_construct")
-
     construct_input = {
     }
     construct_stage_id = wf.add_stage(construct_applet, stage_input=construct_input, name="construct")
     hide_stage_input(wf, construct_stage_id, "vg_exe")
 
-    #hello_world2_input = {
-    #    "infile": dxpy.dxlink({"stage": hello_world1_stage_id, "outputField": "outfile"})
-    #}
-    #hello_world2_stage_id = wf.add_stage(hello_world_applet, stage_input=hello_world2_input, name="hello-world2")
+    index_input = {
+        "vg_tar": dxpy.dxlink({"stage": construct_stage_id, "outputField": "vg_tar"})
+    }
+    index_stage_id = wf.add_stage(find_applet("vg_index"), stage_input=index_input, name="index")
+    hide_stage_input(wf, index_stage_id, "vg_exe")
 
     return wf
 
 def hide_stage_input(workflow, stage_id, input_name):
-    # FIXME: this does not work
-    # https://wiki.dnanexus.com/API-Specification-v1.0.0/Workflows-and-Analyses#API-method:-/workflow-xxxx/update
-    # http://autodoc.dnanexus.com/bindings/python/current/_modules/dxpy/bindings/dxworkflow.html#DXWorkflow.update_stage
-    inputSpecMods = {"stages": {stage_id: {"inputSpecMods": {input_name: {"hidden": True}}}}}
-    workflow.update_stage(stage_id, inputSpecMods=inputSpecMods)
+    workflow.update(stages={stage_id: {"inputSpecMods": {input_name: {"hidden": True}}}})
 
 if __name__ == '__main__':
     main()

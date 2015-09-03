@@ -48,7 +48,8 @@
     {
       "name": "vg_tar",
       "class": "file",
-      "type": "vg_tar"
+      "type": "vg_tar",
+      "patterns": ["*.vg.tar"]
     }
   ],
   "runSpec": {
