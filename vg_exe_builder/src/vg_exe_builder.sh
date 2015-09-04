@@ -22,7 +22,7 @@ main() {
     GIT_REVISION=$(git describe --long --tags --dirty --always)
 
     # build and test
-    make
+    make -j$(nproc)
     make test
 
     # upload the exe

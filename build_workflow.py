@@ -55,8 +55,41 @@ def main():
 def get_vg_exe(project, applets_folder, existing_dxid=None):
     if existing_dxid is not None:
         return dxpy.DXFile(existing_dxid)
-    # TODO: build a new exe
-    return dxpy.DXFile("file-BgXZB8006k64v3YBf18bQF4z")
+    
+    # determine desired git revision of vg
+    vg_git_revision = subprocess.check_output(["git", "describe", "--long", "--always", "--tags"],
+                                              cwd=os.path.join(here,"vg")).strip()
+    # is the exe available already?
+    existing = dxpy.find_data_objects(classname="file", typename="vg_exe",
+                                      project=project.get_id(), folder="/vg-exe",
+                                      properties={"git_revision": vg_git_revision},
+                                      return_handler=True)
+    existing = list(existing)
+    if len(existing) > 0:
+        if len(existing) > 1:
+            print("Warning: found multiple vg executables with git_revision={}, picking one".format(vg_git_revision))
+        existing = existing[0]
+        print("Using vg executable {} ({})".format(vg_git_revision,existing.get_id()))
+        return existing
+    
+    # no - build one for this git revision
+    project.new_folder("/vg-exe", parents=True)
+    print("Building new vg executable for {}".format(vg_git_revision))
+    build_cmd = ["dx","build","-f","--destination",project.get_id()+":/vg-exe/",os.path.join(here,"vg_exe_builder")]
+    print(" ".join(build_cmd))
+    build_applet = dxpy.DXApplet(json.loads(subprocess.check_output(build_cmd))["id"])
+    build_job = build_applet.run({"git_commit": vg_git_revision},
+                                 project=project.get_id(), folder="/vg-exe",
+                                 name="vg_exe_builder " + vg_git_revision)
+    print("Launched {} to build vg executable, waiting...".format(build_job.get_id()))
+    noise = subprocess.Popen(["/bin/bash", "-c", "while true; do sleep 60; date; done"])
+    try:
+        build_job.wait_on_done()
+    finally:
+        noise.kill()
+    vg_exe = dxpy.DXFile(build_job.describe()["output"]["vg_exe"])
+    print("Using vg executable {} ({})".format(vg_git_revision,vg_exe.get_id()))
+    return vg_exe
 
 def build_applets(project, applets_folder, vg_exe):
     here_applets = os.path.join(here, "applets")
@@ -108,7 +141,7 @@ def build_workflow(project, folder, find_applet, find_asset):
             hide_stage_input(wf, map_stage_id, "vg_exe")
 
         return wf
-    
+
     build(False)
     return build(True)
 
