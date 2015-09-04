@@ -20,7 +20,9 @@ main() {
     vg index $index_options -s -d vg/index -t $(nproc) $(ls -1 vg/*.vg)
 
     # tar everything up and output
-    # TODO: embed some string representing index_options in the filename
-    vg_indexed_tar=$(tar cv vg | dx upload --destination "${vg_tar_prefix}.vg.indexed.tar" --type vg_indexed_tar --brief -)
+    index_options_alnum=$(echo "$index_options" | tr -cd '[[:alnum:]]')
+    vg_indexed_tar=$(tar cv vg | \
+                       dx upload --destination "${vg_tar_prefix}.vg.index_${index_options_alnum}.tar" \
+                         --type vg_indexed_tar --property "index_options=${index_options}" --brief -)
     dx-jobutil-add-output vg_indexed_tar "$vg_indexed_tar" --class=file
 }
