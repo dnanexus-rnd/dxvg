@@ -18,6 +18,7 @@ def main():
     argparser.add_argument("--vg-exe", help="ID of vg executable built by vg_exe_builder (default: build a new one)")
     argparser.add_argument("--run-tests", help="Execute run_tests.py on the new workflow", action='store_true')
     argparser.add_argument("--run-tests-no-wait", help="Execute run_tests.py --no-wait", action='store_true')
+    argparser.add_argument("--whole-genome", help="Add --whole-genome to run_tests command if any", action='store_true')
     args = argparser.parse_args()
 
     if args.folder is None:
@@ -49,6 +50,8 @@ def main():
                                                             project.get_id(), wf.get_id())
         if args.run_tests_no_wait is True:
             cmd = cmd + " --no-wait"
+        if args.whole_genome is True:
+            cmd = cmd + " --whole-genome"
         print(cmd)
         sys.exit(os.system(cmd))
 
