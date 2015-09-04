@@ -49,7 +49,8 @@ def run_test_analyses(project, folder, workflow, find_test_data):
         "21+Y": {
             "construct.reference_genome": dxpy.dxlink(find_test_data("hs37d5.fa.gz").get_id()),
             "construct.reference_variants": dxpy.dxlink(find_test_data("ALL.wgs.phase3_shapeit2_mvncall_integrated_v5a.20130502.sites.vcf.gz").get_id()),
-            "construct.reference_contigs": ["21", "Y"]
+            "construct.reference_contigs": ["21", "Y"],
+            "map.reads": dxpy.dxlink(find_test_data("HS1011_unitigs_Y.fastq.gz").get_id())
         }
     }
 
@@ -57,7 +58,8 @@ def run_test_analyses(project, folder, workflow, find_test_data):
     # defaults (reduces cost of running tests).
     stage_instance_types = {
         "construct": "mem1_ssd1_x8",
-        "index": "mem1_ssd1_x8"
+        "index": "mem1_ssd1_x8",
+        "map": "mem1_ssd1_x8"
     }
 
     git_revision = workflow.describe(incl_properties=True)["properties"]["git_revision"]

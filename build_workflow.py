@@ -79,26 +79,38 @@ def build_applets(project, applets_folder, vg_exe):
         applet.set_properties({"git_revision": git_revision})
 
 def build_workflow(project, folder, find_applet, find_asset):
-    wf = dxpy.new_dxworkflow(title="dxvg",
-                             name="dxvg",
-                             description="dxvg",
-                             project=project.get_id(),
-                             folder=folder,
-                             properties={"git_revision": git_revision})
+    def build(incl_map):
+        nm = "vg_construct_index_map" if incl_map else "vg_construct_index"
+        wf = dxpy.new_dxworkflow(title=nm,
+                                 name=nm,
+                                 description=nm,
+                                 project=project.get_id(),
+                                 folder=folder,
+                                 properties={"git_revision": git_revision})
 
-    construct_applet = find_applet("vg_construct")
-    construct_input = {
-    }
-    construct_stage_id = wf.add_stage(construct_applet, stage_input=construct_input, name="construct")
-    hide_stage_input(wf, construct_stage_id, "vg_exe")
+        construct_applet = find_applet("vg_construct")
+        construct_input = {
+        }
+        construct_stage_id = wf.add_stage(construct_applet, stage_input=construct_input, name="construct")
+        hide_stage_input(wf, construct_stage_id, "vg_exe")
 
-    index_input = {
-        "vg_tar": dxpy.dxlink({"stage": construct_stage_id, "outputField": "vg_tar"})
-    }
-    index_stage_id = wf.add_stage(find_applet("vg_index"), stage_input=index_input, name="index")
-    hide_stage_input(wf, index_stage_id, "vg_exe")
+        index_input = {
+            "vg_tar": dxpy.dxlink({"stage": construct_stage_id, "outputField": "vg_tar"})
+        }
+        index_stage_id = wf.add_stage(find_applet("vg_index"), stage_input=index_input, name="index")
+        hide_stage_input(wf, index_stage_id, "vg_exe")
 
-    return wf
+        if incl_map:
+            map_input = {
+                "vg_indexed_tar": dxpy.dxlink({"stage": index_stage_id, "outputField": "vg_indexed_tar"})
+            }
+            map_stage_id = wf.add_stage(find_applet("vg_map"), stage_input=map_input, name="map")
+            hide_stage_input(wf, map_stage_id, "vg_exe")
+
+        return wf
+    
+    build(False)
+    return build(True)
 
 def hide_stage_input(workflow, stage_id, input_name):
     workflow.update(stages={stage_id: {"inputSpecMods": {input_name: {"hidden": True}}}})
