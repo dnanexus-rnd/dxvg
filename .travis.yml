@@ -1,0 +1,13 @@
+language: python
+python:
+- 2.7
+install: true
+script:
+- deactivate
+- wget https://wiki.dnanexus.com/images/files/dx-toolkit-current-ubuntu-12.04-amd64.tar.gz
+- tar zxf dx-toolkit-current-ubuntu-12.04-amd64.tar.gz
+- source dx-toolkit/environment
+- if [ "$TRAVIS_BRANCH" != "whole-genome-integration" ]; then python build_workflow.py --run-tests-no-wait; else python build_workflow.py --run-tests-no-wait --whole-genome; fi
+env:
+  global:
+    secure: kj16zgii662DXv0bxCzyT5pz1gYRqsPsLKpoqv2ofkrO1V1S8A37qBNjFgw3r9z7ZGY6E/P02BN3dJDLz6yDVefb/zu/P9jyKu5oB8SKKM3GlsR6mIO80D8ekouQMSLjlsTkkS8EjxtVQGOC1pPjMEHCWLhdHOZFfQn8IlZVhIthrsPNGIwT9w9kcs5W68rxA32FuL6s5YFzZNyQHQEnS6RHDaRM8CPOMOYDSxfrskfYs+o9cmapqHhQcbiLmIdnZxIOKR1qbA9m/5KDMXzHpH2LgKqqh3MDHRuJ87eDhPj9Dg3GKQcqlJuF0PFej3TNiS9AaqxXNWKDcPIubYQGagiSdNr9OD8znKpo/B/DZIVStO4CEJo+rU406GMsoZcWHmIO6WA/UL+4/Fx7AHh2RAHtlwzUwPLMbPrUQVJezRmClayE+xRTTFYJpoSQCfce0WuRCWUmL7kZZIqH2MG7jx3eC3zz0PoWy6TgzIbt0XWfo4im8Alv7L6eatoBUPZNvBb2ICMxZwo+p6Ty0nSfjz4c5eJFq/Y5EhoczpMiad0ufZT6J5C30aIx+9MxMxfl6VGRlRevtqpQnM8P3CJssVifc1gVZ4gfDFkNMzybAsRrh/Q6kNDBOgPPyxmy/p0cEx072Px5+1yT75vwAI3lbiGQAubF8VjciTak3LBXf4U=
