@@ -11,6 +11,9 @@ main() {
     sudo apt-get install -y -qq gcc-4.9 g++-4.9 cmake
     sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 100 \
                              --slave /usr/bin/g++ g++ /usr/bin/g++-4.9
+    JQFN=$(which jq)
+    curl -L https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 > "$JQFN"
+    chmod +x "$JQFN"
 
     # clone vg git repository
     git clone -n "$git_url" vg
