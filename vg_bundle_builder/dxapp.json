@@ -1,7 +1,7 @@
 {
-  "name": "vg_exe_builder",
-  "title": "vg_exe_builder",
-  "summary": "vg_exe_builder",
+  "name": "vg_bundle_builder",
+  "title": "vg_bundle_builder",
+  "summary": "vg_bundle_builder",
   "dxapi": "1.0.0",
   "version": "0.0.1",
   "inputSpec": [
@@ -22,14 +22,15 @@
   ],
   "outputSpec": [
     {
-      "name": "vg_exe",
+      "name": "vg_bundle",
       "class": "file",
-      "type": "vg_exe"
+      "patterns": ["*.tar.gz"],
+      "type": "vg_bundle"
     }
   ],
   "runSpec": {
     "interpreter": "bash",
-    "file": "src/vg_exe_builder.sh",
+    "file": "src/vg_bundle_builder.sh",
     "execDepends": [
       {"name": "samtools"},
       {"name": "tabix"},

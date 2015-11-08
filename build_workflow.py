@@ -15,7 +15,7 @@ def main():
     argparser = argparse.ArgumentParser(description="Build dxvg workflow on DNAnexus.")
     argparser.add_argument("--project", help="DNAnexus project ID", default="project-BgYjfJQ0QpJ5qyBvfbzXY890")
     argparser.add_argument("--folder", help="Folder within project (default: timestamp/git-based)", default=None)
-    argparser.add_argument("--vg-exe", help="ID of vg executable built by vg_exe_builder (default: build a new one)")
+    argparser.add_argument("--vg-bundle", help="ID of vg bundle built by vg_bundle_builder (default: find existing or build new bundle corresponding to current git revision)")
     argparser.add_argument("--run-tests", help="Execute run_tests.py on the new workflow", action='store_true')
     argparser.add_argument("--run-tests-no-wait", help="Execute run_tests.py --no-wait", action='store_true')
     argparser.add_argument("--whole-genome", help="Add --whole-genome to run_tests command if any", action='store_true')
@@ -29,9 +29,9 @@ def main():
     print("project: {} ({})".format(project.name, args.project))
     print("folder: {}".format(args.folder))
 
-    vg_exe = get_vg_exe(project, applets_folder, args.vg_exe)
+    vg_bundle = get_vg_bundle(project, applets_folder, args.vg_bundle)
 
-    build_applets(project, applets_folder, vg_exe)
+    build_applets(project, applets_folder, vg_bundle)
 
     def find_applet(applet_name):
         return dxpy.find_one_data_object(classname='applet', name=applet_name,
@@ -55,7 +55,7 @@ def main():
         print(cmd)
         sys.exit(os.system(cmd))
 
-def get_vg_exe(project, applets_folder, existing_dxid=None):
+def get_vg_bundle(project, applets_folder, existing_dxid=None):
     if existing_dxid is not None:
         return dxpy.DXFile(existing_dxid)
     
@@ -63,38 +63,38 @@ def get_vg_exe(project, applets_folder, existing_dxid=None):
     vg_git_revision = subprocess.check_output(["git", "describe", "--long", "--always", "--tags"],
                                               cwd=os.path.join(here,"vg")).strip()
     # is the exe available already?
-    existing = dxpy.find_data_objects(classname="file", typename="vg_exe",
-                                      project=project.get_id(), folder="/vg-exe",
+    existing = dxpy.find_data_objects(classname="file", typename="vg_bundle",
+                                      project=project.get_id(), folder="/vg-bundle",
                                       properties={"git_revision": vg_git_revision},
                                       return_handler=True)
     existing = list(existing)
     if len(existing) > 0:
         if len(existing) > 1:
-            print("Warning: found multiple vg executables with git_revision={}, picking one".format(vg_git_revision))
+            print("Warning: found multiple vg bundles with git_revision={}, picking one".format(vg_git_revision))
         existing = existing[0]
-        print("Using vg executable {} ({})".format(vg_git_revision,existing.get_id()))
+        print("Using vg bundle {} ({})".format(vg_git_revision,existing.get_id()))
         return existing
     
     # no - build one for this git revision
-    project.new_folder("/vg-exe", parents=True)
-    print("Building new vg executable for {}".format(vg_git_revision))
-    build_cmd = ["dx","build","-f","--destination",project.get_id()+":/vg-exe/",os.path.join(here,"vg_exe_builder")]
+    project.new_folder("/vg-bundle", parents=True)
+    print("Building new vg bundle for {}".format(vg_git_revision))
+    build_cmd = ["dx","build","-f","--destination",project.get_id()+":/vg-bundle/",os.path.join(here,"vg_bundle_builder")]
     print(" ".join(build_cmd))
     build_applet = dxpy.DXApplet(json.loads(subprocess.check_output(build_cmd))["id"])
     build_job = build_applet.run({"git_commit": vg_git_revision},
-                                 project=project.get_id(), folder="/vg-exe",
-                                 name="vg_exe_builder " + vg_git_revision)
-    print("Launched {} to build vg executable, waiting...".format(build_job.get_id()))
+                                 project=project.get_id(), folder="/vg-bundle",
+                                 name="vg_bundle_builder " + vg_git_revision)
+    print("Launched {} to build vg bundle, waiting...".format(build_job.get_id()))
     noise = subprocess.Popen(["/bin/bash", "-c", "while true; do sleep 60; date; done"])
     try:
         build_job.wait_on_done()
     finally:
         noise.kill()
-    vg_exe = dxpy.DXFile(build_job.describe()["output"]["vg_exe"])
-    print("Using vg executable {} ({})".format(vg_git_revision,vg_exe.get_id()))
-    return vg_exe
+    vg_bundle = dxpy.DXFile(build_job.describe()["output"]["vg_bundle"])
+    print("Using vg bundle {} ({})".format(vg_git_revision,vg_bundle.get_id()))
+    return vg_bundle
 
-def build_applets(project, applets_folder, vg_exe):
+def build_applets(project, applets_folder, vg_bundle):
     here_applets = os.path.join(here, "applets")
     applet_dirs = [os.path.join(here_applets,dir) for dir in os.listdir(here_applets)]
     applet_dirs = [dir for dir in applet_dirs if os.path.isdir(dir)]
@@ -102,8 +102,8 @@ def build_applets(project, applets_folder, vg_exe):
     project.new_folder(applets_folder, parents=True)
     for applet_dir in applet_dirs:
         if os.path.isfile(os.path.join(applet_dir, "dxapp.json.template")):
-            sed_cmd = "sed s/VG_EXE_DXID/{}/g {} > {}"
-            sed_cmd = sed_cmd.format(vg_exe.get_id(),
+            sed_cmd = "sed s/VG_BUNDLE_DXID/{}/g {} > {}"
+            sed_cmd = sed_cmd.format(vg_bundle.get_id(),
                                      os.path.join(applet_dir, "dxapp.json.template"),
                                      os.path.join(applet_dir, "dxapp.json"))
             print(sed_cmd)
@@ -128,28 +128,22 @@ def build_workflow(project, folder, find_applet, find_asset):
         construct_input = {
         }
         construct_stage_id = wf.add_stage(construct_applet, stage_input=construct_input, name="construct")
-        hide_stage_input(wf, construct_stage_id, "vg_exe")
 
         index_input = {
             "vg_tar": dxpy.dxlink({"stage": construct_stage_id, "outputField": "vg_tar"})
         }
         index_stage_id = wf.add_stage(find_applet("vg_index"), stage_input=index_input, name="index")
-        hide_stage_input(wf, index_stage_id, "vg_exe")
 
         if incl_map:
             map_input = {
                 "vg_indexed_tar": dxpy.dxlink({"stage": index_stage_id, "outputField": "vg_indexed_tar"})
             }
             map_stage_id = wf.add_stage(find_applet("vg_map"), stage_input=map_input, name="map")
-            hide_stage_input(wf, map_stage_id, "vg_exe")
 
         return wf
 
     build(False)
     return build(True)
-
-def hide_stage_input(workflow, stage_id, input_name):
-    workflow.update(stages={stage_id: {"inputSpecMods": {input_name: {"hidden": True}}}})
 
 if __name__ == '__main__':
     main()

@@ -16,12 +16,6 @@
       "name": "index_options",
       "class": "string",
       "default": "-k 27 -e 7"
-    },
-    {
-      "name": "vg_exe",
-      "class": "file",
-      "type": "vg_exe",
-      "default": {"$dnanexus_link": "VG_EXE_DXID"}
     }
   ],
   "outputSpec": [
@@ -40,6 +34,10 @@
       {
         "name": "gcc4.9_runtime_debs.tar",
         "id": {"$dnanexus_link": "file-BjzJZzQ0j8qz5JJyQ9q8gXyy"}
+      },
+      {
+        "name": "vg_bundle.tar.gz",
+        "id": {"$dnanexus_link": "VG_BUNDLE_DXID"}
       }
     ],
     "systemRequirements": {

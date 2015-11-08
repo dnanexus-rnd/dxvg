@@ -6,10 +6,6 @@ main() {
     # install dependencies
     sudo dpkg -i /tmp/dx_deb_bundle/*.deb
 
-    # install vg executable
-    dx cat "$vg_exe" | zcat > /usr/local/bin/vg
-    chmod +x /usr/local/bin/vg
-
     # unpack vg tar
     dx cat "$vg_tar" | tar vx
 
