@@ -4,10 +4,7 @@ main() {
     set -ex -o pipefail
 
     # install dependencies
-    sudo rm -f /etc/apt/apt.conf.d/99dnanexus
-    sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-    sudo apt-get -qq update
-    sudo apt-get -qq install -y gcc-4.9 g++-4.9 
+    sudo dpkg -i /tmp/dx_deb_bundle/*.deb
 
     # install vg executable
     dx cat "$vg_exe" | zcat > /usr/local/bin/vg

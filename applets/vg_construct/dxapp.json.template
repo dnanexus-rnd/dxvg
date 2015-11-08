@@ -56,14 +56,17 @@
     "interpreter": "bash",
     "file": "src/code.sh",
     "execDepends": [{"name": "libjansson4"}],
+    "bundledDepends": [
+      {
+        "name": "gcc4.9_runtime_debs.tar",
+        "id": {"$dnanexus_link": "file-BjzJZzQ0j8qz5JJyQ9q8gXyy"}
+      }
+    ],
     "systemRequirements": {
       "main": {
         "instanceType": "mem3_ssd1_x16"
       }
     }
-  },
-  "access": {
-    "network": ["*"]
   },
   "authorizedUsers": []
 }
