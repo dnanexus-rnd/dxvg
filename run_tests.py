@@ -64,9 +64,9 @@ def run_test_analyses(project, folder, workflow, find_test_data):
     # The tests might only need smaller instance types than the applet
     # defaults (reduces cost of running tests).
     stage_instance_types = {
-        "construct": "mem2_ssd1_x8",
-        "index": "mem2_ssd1_x8",
-        "map": "mem2_ssd1_x8"
+        "construct": "mem3_ssd1_x8",
+        "index": "mem3_ssd1_x8",
+        "map": "mem3_ssd1_x8"
     }
 
     git_revision = workflow.describe(incl_properties=True)["properties"]["git_revision"]

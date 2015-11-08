@@ -20,7 +20,7 @@ main() {
     if [ -n "$reads2" ]; then
         r2cmd="-f reads2.fastq.gz"
     fi
-    gam=$(vg map -f reads.fastq.gz $r2cmd -d vg/index -t $(nproc) $map_options \
+    gam=$(vg map -f reads.fastq.gz $r2cmd -g vg/index.gcsa -x vg/index.xg -t $(nproc) $map_options \
             | dx upload --destination "${reads_prefix}.gam" --brief -)
     dx-jobutil-add-output gam "$gam" --class=file
 }

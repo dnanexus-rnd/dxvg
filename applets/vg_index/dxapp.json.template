@@ -13,9 +13,19 @@
       "patterns": ["*.vg.tar"]
     },
     {
-      "name": "index_options",
+      "name": "prune_complex_options",
       "class": "string",
-      "default": "-k 27 -e 7"
+      "default": "-l 16 -e 3"
+    },
+    {
+      "name": "prune_subgraphs_options",
+      "class": "string",
+      "default": "-l 100"
+    },
+    {
+      "name": "kmers_options",
+      "class": "string",
+      "default": "-k 16 -F"
     }
   ],
   "outputSpec": [
@@ -42,7 +52,7 @@
     ],
     "systemRequirements": {
       "main": {
-        "instanceType": "mem3_ssd1_x16"
+        "instanceType": "mem3_ssd1_x32"
       }
     }
   },
