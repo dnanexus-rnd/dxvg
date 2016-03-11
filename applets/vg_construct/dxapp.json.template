@@ -52,8 +52,8 @@
     "execDepends": [{"name": "libjansson4"}],
     "bundledDepends": [
       {
-        "name": "gcc4.9_runtime_debs.tar",
-        "id": {"$dnanexus_link": "file-BjzJZzQ0j8qz5JJyQ9q8gXyy"}
+        "name": "gcc4.9_runtime_debs_trusty.tar",
+        "id": {"$dnanexus_link": "file-BqVY4fQ00y3q7fP83xzqF95B"}
       },
       {
         "name": "vg_bundle.tar.gz",
@@ -64,7 +64,9 @@
       "main": {
         "instanceType": "mem3_ssd1_x16"
       }
-    }
+    },
+    "distribution": "Ubuntu",
+    "release": "14.04"
   },
   "authorizedUsers": []
 }

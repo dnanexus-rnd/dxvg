@@ -6,9 +6,8 @@ main() {
     # install dependencies
     sudo rm -f /etc/apt/apt.conf.d/99dnanexus
     sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-    sudo add-apt-repository -y ppa:kalakris/cmake
     sudo apt-get -qq update
-    sudo apt-get install -y -qq gcc-4.9 g++-4.9 cmake
+    sudo apt-get install -y -qq gcc-4.9 g++-4.9
     sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 100 \
                              --slave /usr/bin/g++ g++ /usr/bin/g++-4.9
     JQFN=$(which jq)
@@ -25,13 +24,14 @@ main() {
     GIT_REVISION=$(git describe --long --tags --dirty --always)
 
     # build and test
-    make -j$(nproc)
+    source source_me.sh
     make test
+    make static
 
     # build the build_gcsa utility as well
-    make -C gcsa2 -j$(nproc)
+    make -C deps/gcsa2 -j$(nproc)
 
-    cp vg gcsa2/build_gcsa /usr/local/bin
+    cp bin/vg deps/gcsa2/build_gcsa /usr/local/bin
 
     # upload the exe
     vg_bundle=$(tar -C / -zc usr/local/bin/vg usr/local/bin/build_gcsa | \

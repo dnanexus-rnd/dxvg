@@ -34,19 +34,20 @@
     "execDepends": [
       {"name": "samtools"},
       {"name": "tabix"},
-      {"name": "protobuf-compiler"},
-      {"name": "libprotoc-dev"},
       {"name": "libjansson-dev"},
       {"name": "automake"},
       {"name": "libtool"},
       {"name": "libncurses-dev"},
-      {"name": "libbz2-dev"}
+      {"name": "libbz2-dev"},
+      {"name": "cmake"}
     ],
     "systemRequirements": {
       "main": {
         "instanceType": "mem1_ssd1_x4"
       }
-    }
+    },
+    "distribution": "Ubuntu",
+    "release": "14.04"
   },
   "access": {
     "network": ["*"]
