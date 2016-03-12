@@ -3,9 +3,6 @@
 main() {
     set -ex -o pipefail
 
-    # install dependencies
-    sudo dpkg -i /tmp/dx_deb_bundle/*.deb
-
     # download stuff
     pids=()
     dx cat "$vg_indexed_tar" | tar vx & pids+=($!)

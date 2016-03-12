@@ -41,10 +41,6 @@
     "execDepends": [{"name": "libjansson4"}],
     "bundledDepends": [
       {
-        "name": "gcc4.9_runtime_debs_trusty.tar",
-        "id": {"$dnanexus_link": "file-BqVY4fQ00y3q7fP83xzqF95B"}
-      },
-      {
         "name": "vg_bundle.tar.gz",
         "id": {"$dnanexus_link": "VG_BUNDLE_DXID"}
       }

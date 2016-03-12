@@ -3,9 +3,6 @@
 main() {
     set -ex -o pipefail
 
-    # install dependencies
-    sudo dpkg -i /tmp/dx_deb_bundle/*.deb
-
     # fetch reference data
     dx cat "$reference_genome" | zcat > reference_genome.fa &
     dx download "$reference_variants" -o variants.vcf.gz

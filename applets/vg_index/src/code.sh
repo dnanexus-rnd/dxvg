@@ -3,9 +3,6 @@
 main() {
     set -ex -o pipefail
 
-    # install dependencies
-    sudo dpkg -i /tmp/dx_deb_bundle/*.deb
-
     # unpack vg tar
     dx cat "$vg_tar" | tar vx
     pushd vg
