@@ -39,7 +39,10 @@
       {"name": "libtool"},
       {"name": "libncurses-dev"},
       {"name": "libbz2-dev"},
-      {"name": "cmake"}
+      {"name": "cmake"},
+      {"name": "libraptor2-dev"},
+      {"name": "raptor2-utils"},
+      {"name": "rasqal-utils"}
     ],
     "systemRequirements": {
       "main": {
