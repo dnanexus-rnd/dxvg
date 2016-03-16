@@ -15,7 +15,7 @@
     {
       "name": "prune_complex_options",
       "class": "string",
-      "default": "-l 16 -e 3"
+      "default": "-l 16 -e 2"
     },
     {
       "name": "prune_subgraphs_options",
