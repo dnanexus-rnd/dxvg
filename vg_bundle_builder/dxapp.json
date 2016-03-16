@@ -40,7 +40,10 @@
       {"name": "libncurses-dev"},
       {"name": "libbz2-dev"},
       {"name": "cmake"},
-      {"name": "libraptor2-dev"},
+      {"name": "libbison-dev"},
+      {"name": "bison"},
+      {"name": "libfl-dev"},
+      {"name": "flex"},
       {"name": "raptor2-utils"},
       {"name": "rasqal-utils"}
     ],
