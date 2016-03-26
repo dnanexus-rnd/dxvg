@@ -25,6 +25,7 @@ main() {
 
     # build and test
     source source_me.sh
+    make -j$(nproc)
     make test
     make static
 

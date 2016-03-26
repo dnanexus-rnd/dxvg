@@ -25,6 +25,7 @@ main() {
     done
     ls -1sh /tmp/dxvg
     build_gcsa -d 1 -o index $graphs
+    mv index.lcp index.gcsa.lcp
 
     # tar everything up and output
     popd
