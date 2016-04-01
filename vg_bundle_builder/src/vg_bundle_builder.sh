@@ -28,14 +28,10 @@ main() {
     make -j$(nproc)
     make test
     make static
-
-    # build the build_gcsa utility as well
-    make -C deps/gcsa2 -j$(nproc)
-
-    cp bin/vg deps/gcsa2/build_gcsa /usr/local/bin
+    cp bin/vg /usr/local/bin
 
     # upload the exe
-    vg_bundle=$(tar -C / -zc usr/local/bin/vg usr/local/bin/build_gcsa | \
+    vg_bundle=$(tar -C / -zc usr/local/bin/vg | \
                 dx upload --destination "vg-bundle-${GIT_REVISION}.tar.gz" --type vg_bundle \
                           --property "git_revision=${GIT_REVISION}" --brief -)
     dx-jobutil-add-output vg_bundle "$vg_bundle" --class=file
