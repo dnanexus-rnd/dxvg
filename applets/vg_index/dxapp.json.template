@@ -53,7 +53,16 @@
     ],
     "systemRequirements": {
       "main": {
+        "instanceType": "mem1_ssd1_x2"
+      },
+      "xg": {
         "instanceType": "mem3_ssd1_x32"
+      },
+      "kmers": {
+        "instanceType": "mem3_ssd1_x8"
+      },
+      "gcsa": {
+        "instanceType": "dx_i2.4xlarge"
       }
     },
     "distribution": "Ubuntu",

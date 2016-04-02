@@ -58,7 +58,13 @@
     ],
     "systemRequirements": {
       "main": {
+        "instanceType": "mem1_ssd1_x2"
+      },
+      "process": {
         "instanceType": "mem3_ssd1_x16"
+      },
+      "postprocess": {
+        "instanceType": "mem3_ssd1_x8"
       }
     },
     "distribution": "Ubuntu",
