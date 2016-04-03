@@ -49,7 +49,7 @@
     ],
     "systemRequirements": {
       "main": {
-        "instanceType": "mem1_ssd1_x8"
+        "instanceType": "mem2_ssd1_x8"
       }
     },
     "distribution": "Ubuntu",
