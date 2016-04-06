@@ -15,7 +15,7 @@
     {
       "name": "prune_complex_options",
       "class": "string",
-      "default": "-l 16 -e 3"
+      "default": "-l 16 -e 4"
     },
     {
       "name": "prune_subgraphs_options",
@@ -25,7 +25,7 @@
     {
       "name": "kmers_options",
       "class": "string",
-      "default": "-k 16 -F"
+      "default": "-k 16"
     },
     {
       "name": "gcsa_options",

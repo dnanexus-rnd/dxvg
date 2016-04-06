@@ -25,7 +25,7 @@
     {
       "name": "map_options",
       "class": "string",
-      "default": "-GX 0.9 -m 10 -c 5"
+      "default": "-GX 0.9 -A 5"
     }
   ],
   "outputSpec": [
