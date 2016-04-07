@@ -62,7 +62,7 @@
         "instanceType": "mem3_ssd1_x8"
       },
       "gcsa": {
-        "instanceType": "dx_i2.4xlarge"
+        "instanceType": "dx_i2.8xlarge"
       }
     },
     "distribution": "Ubuntu",
