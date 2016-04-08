@@ -47,7 +47,7 @@
     ],
     "systemRequirements": {
       "main": {
-        "instanceType": "mem1_ssd1_x32"
+        "instanceType": "mem3_ssd1_x32"
       }
     },
     "distribution": "Ubuntu",
