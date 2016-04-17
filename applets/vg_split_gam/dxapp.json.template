@@ -6,6 +6,12 @@
   "version": "0.0.1",
   "inputSpec": [
     {
+      "name": "vg_indexed_tar",
+      "class": "file",
+      "optional": false,
+      "type": "vg_indexed_tar"
+    },
+    {
       "name": "gam",
       "class": "file",
       "patterns": ["*.gam"]
