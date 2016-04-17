@@ -1,0 +1,48 @@
+{
+  "name": "vg_split_gam",
+  "title": "vg_split_gam",
+  "summary": "vg_split_gam",
+  "dxapi": "1.0.0",
+  "version": "0.0.1",
+  "inputSpec": [
+    {
+      "name": "gam",
+      "class": "file",
+      "patterns": ["*.gam"]
+    },
+    {
+      "name": "ranges",
+      "class": "file",
+      "patterns": ["*.bed"]
+    }
+  ],
+  "outputSpec": [
+    {
+      "name": "gams",
+      "class": "array:file",
+      "patterns": ["*.gam"]
+    }
+  ],
+  "runSpec": {
+    "interpreter": "bash",
+    "file": "src/code.sh",
+    "execDepends": [{"name": "libjansson4"}],
+    "bundledDepends": [
+      {
+        "name": "vg_bundle.tar.gz",
+        "id": {"$dnanexus_link": "VG_BUNDLE_DXID"}
+      }
+    ],
+    "systemRequirements": {
+      "main": {
+        "instanceType": "mem3_ssd1_x8"
+      }
+    },
+    "distribution": "Ubuntu",
+    "release": "14.04"
+  },
+  "access": {
+    "network": ["*"]
+  },
+  "authorizedUsers": []
+}
