@@ -9,7 +9,10 @@ main() {
 
     # run vg filter    
     mkdir -p out/gams
-    vg filter -x vg/index.xg -B "out/gams/${gam_prefix}-chunk" -R in/ranges/* in/gam/*
+    if [ -z "$output_prefix" ]; then
+        output_prefix="${gam_prefix}"
+    fi
+    vg filter -x vg/index.xg -B "out/gams/${output_prefix}" -R in/ranges/* in/gam/*
     find out -type f
 
     dx-upload-all-outputs --parallel

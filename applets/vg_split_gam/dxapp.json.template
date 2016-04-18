@@ -20,6 +20,11 @@
       "name": "ranges",
       "class": "file",
       "patterns": ["*.bed"]
+    },
+    {
+      "name": "output_prefix",
+      "class": "string",
+      "optional": true
     }
   ],
   "outputSpec": [
