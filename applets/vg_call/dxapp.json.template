@@ -1,0 +1,73 @@
+{
+  "name": "vg_call",
+  "title": "vg_call",
+  "summary": "vg_call",
+  "dxapi": "1.0.0",
+  "version": "0.0.1",
+  "inputSpec": [
+    {
+      "name": "vg_indexed_tar",
+      "class": "file",
+      "optional": false,
+      "type": "vg_indexed_tar"
+    },
+    {
+      "name": "gam",
+      "class": "file",
+      "patterns": ["*.gam"]
+    },
+    {
+      "name": "chromosome",
+      "class": "string"
+    },
+    {
+      "name": "chromosome_length",
+      "class": "int"
+    },
+    {
+      "name": "sample_name",
+      "class": "string"
+    },
+    {
+      "name": "glenn2vcf",
+      "class": "file",
+      "default": {"$dnanexus_link": "file-BvJQ0Z00QpJ5GjzbkbPGV4J2"}
+    }
+  ],
+  "outputSpec": [
+    {
+      "name": "vcf",
+      "class": "file",
+      "patterns": ["*.vcf.gz"]
+    }
+  ],
+  "runSpec": {
+    "interpreter": "bash",
+    "file": "src/code.sh",
+    "execDepends": [
+      {"name": "libjansson4"},
+      {"name": "tabix"}
+    ],
+    "bundledDepends": [
+      {
+        "name": "vg_bundle.tar.gz",
+        "id": {"$dnanexus_link": "VG_BUNDLE_DXID"}
+      },
+      {
+        "name": "gcc4.9_runtime_debs_trusty.tar",
+        "id": {"$dnanexus_link": "file-BqVY4fQ00y3q7fP83xzqF95B"}
+      }
+    ],
+    "systemRequirements": {
+      "main": {
+        "instanceType": "mem3_ssd1_x32"
+      }
+    },
+    "distribution": "Ubuntu",
+    "release": "14.04"
+  },
+  "access": {
+    "network": ["*"]
+  },
+  "authorizedUsers": []
+}
