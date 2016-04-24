@@ -1,0 +1,75 @@
+{
+  "name": "vg_wgs_pipeline",
+  "title": "vg_wgs_pipeline",
+  "summary": "vg_wgs_pipeline",
+  "dxapi": "1.0.0",
+  "version": "0.0.1",
+  "inputSpec": [
+    {
+      "name": "vg_indexed_tar",
+      "class": "file",
+      "optional": false,
+      "type": "vg_indexed_tar"
+    },
+    {
+      "name": "vg_map",
+      "class": "applet",
+      "optional": false,
+      "patterns": ["vg_map"]
+    },
+    {
+      "name": "vg_split_gam",
+      "class": "applet",
+      "optional": false,
+      "patterns": ["vg_split_gam"]
+    },
+    {
+      "name": "vg_call",
+      "class": "applet",
+      "optional": false,
+      "patterns": ["vg_call"]
+    },
+    {
+      "name": "reads",
+      "class": "array:file",
+      "patterns": ["*.fq.gz", "*.fastq.gz"]
+    },
+    {
+      "name": "reads2",
+      "class": "array:file",
+      "patterns": ["*.fq.gz", "*.fastq.gz"]
+    },
+    {
+      "name": "chromosomes",
+      "class": "array:string",
+      "default": ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","X","Y"]
+    },
+    {
+      "name": "chromosome_lengths",
+      "class": "array:int",
+      "default": [249250621,243199373,198022430,191154276,180915260,171115067,159138663,146364022,141213431,135534747,135006516,133851895,115169878,107349540,102531392,90354753,81195210,78077248,59128983,63025520,48129895,51304566,155270560,59373566]
+    },
+    {
+      "name": "output_name",
+      "class": "string",
+      "optional": true
+    }
+  ],
+  "outputSpec": [
+    {
+      "name": "gam",
+      "class": "file",
+      "patterns": ["*.gam"]
+    },
+    {
+      "name": "vcf",
+      "class": "file",
+      "patterns": ["*.vcf.gz"]
+    }
+  ],
+  "runSpec": {
+    "interpreter": "bash",
+    "file": "src/code.sh"
+  },
+  "authorizedUsers": []
+}
