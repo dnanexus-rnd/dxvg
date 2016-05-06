@@ -26,7 +26,7 @@ main() {
     # build and test
     source source_me.sh
     make -j$(nproc)
-    #make test
+    make test
     make static
     cp bin/vg scripts/chunked_call /usr/local/bin
 
