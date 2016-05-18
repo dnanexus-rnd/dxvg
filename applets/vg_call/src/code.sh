@@ -15,7 +15,7 @@ main() {
     exit_code=0
     python /usr/local/bin/chunked_call vg/index.xg in/gam/* \
             "$chromosome" "$chromosome_length" "$sample_name" results \
-            --chunk 25000000 --threads $(nproc) \
+            --call_opts "$call_opts" --chunk 25000000 --threads $(nproc) \
             || exit_code=$?
     find results -type f
     if [ "$exit_code" -ne "0" ]; then

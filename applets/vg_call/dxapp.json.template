@@ -17,6 +17,11 @@
       "patterns": ["*.gam"]
     },
     {
+      "name": "call_opts",
+      "class": "string",
+      "default": "-r 0.0001 -b 0.4 -f 0.25 -d 10 -s 10"
+    },
+    {
       "name": "chromosome",
       "class": "string"
     },
