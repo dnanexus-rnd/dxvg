@@ -13,16 +13,6 @@
       "patterns": ["*.vg.tar"]
     },
     {
-      "name": "prune_complex_options",
-      "class": "string",
-      "default": "-l 16 -e 4"
-    },
-    {
-      "name": "prune_subgraphs_options",
-      "class": "string",
-      "default": "-l 32"
-    },
-    {
       "name": "kmers_options",
       "class": "string",
       "default": "-k 16"

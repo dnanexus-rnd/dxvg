@@ -16,8 +16,6 @@ main() {
     for vgfn in $(ls -1 *.vg); do
         vg_i=$(dx upload --brief "$vgfn")
         kmers_job=$(dx-jobutil-new-job kmers --name "$vgfn kmers" -i "vg=${vg_i}" \
-                                             -i "prune_complex_options=${prune_complex_options}" \
-                                             -i "prune_subgraphs_options=${prune_subgraphs_options}" \
                                              -i "kmers_options=${kmers_options}")
         jbors="$jbors -i kmers:array:jobref=${kmers_job}:kmers"
     done
@@ -25,8 +23,6 @@ main() {
     # schedule gcsa job
     gcsajob=$(dx-jobutil-new-job gcsa -i "vg_tar=${vg_tar}" -i "vg_tar_prefix=${vg_tar_prefix}" \
                                       -i xgjob:string=${xgjob} \
-                                      -i "prune_complex_options=${prune_complex_options}" \
-                                      -i "prune_subgraphs_options=${prune_subgraphs_options}" \
                                       -i "kmers_options=${kmers_options}" -i "gcsa_options=${gcsa_options}" \
                                       $jbors)
     dx-jobutil-add-output vg_indexed_tar --class=jobref "$gcsajob:vg_indexed_tar" 
@@ -49,10 +45,12 @@ xg() {
 kmers() {
     set -ex -o pipefail
 
+    vg_name=$(dx describe --name "$vg")
+    vg_name=${vg_name%.vg}
+
     dx-jobutil-add-output kmers --class=file \
         $(dx cat "$vg" \
-            | vg mod -p -t $(nproc) $prune_complex_options - \
-            | vg mod -S $prune_subgraphs_options - \
+            | vg mod -N -t $(nproc) -r "$vg_name" - \
             | vg kmers -gB -t $(nproc) -H 1000000000 -T 1000000001 $kmers_options - \
             | dx upload --destination "${vg_name}.kmers" --brief -)
 }
@@ -81,11 +79,9 @@ gcsa() {
     # tar everything up and output
     wait $vgpid
     wait $xgpid
-    index_options_alnum=$(echo "${prune_complex_options}${prune_subgraphs_options}${kmers_options}${gcsa_options}" | tr -cd '[[:alnum:]]')
+    index_options_alnum=$(echo "${kmers_options}${gcsa_options}" | tr -cd '[[:alnum:]]')
     vg_indexed_tar=$(tar cv vg | \
                        dx upload --destination "${vg_tar_prefix}.vg.index_${index_options_alnum}.tar" \
-                         --property "prune_complex_options=${prune_complex_options}" \
-                         --property "prune_subgraphs_options=${prune_subgraphs_options}" \
                          --property "kmers_options=${kmers_options}" \
                          --property "gcsa_options=${gcsa_options}" \
                          --type vg_indexed_tar --brief -)
