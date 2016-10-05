@@ -45,7 +45,8 @@
       {"name": "libfl-dev"},
       {"name": "flex"},
       {"name": "raptor2-utils"},
-      {"name": "rasqal-utils"}
+      {"name": "rasqal-utils"},
+      {"name": "rs"}
     ],
     "systemRequirements": {
       "main": {

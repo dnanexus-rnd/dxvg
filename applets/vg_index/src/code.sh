@@ -16,6 +16,7 @@ main() {
     for vgfn in $(ls -1 *.vg); do
         vg_i=$(dx upload --brief "$vgfn")
         kmers_job=$(dx-jobutil-new-job kmers --name "$vgfn kmers" -i "vg=${vg_i}" \
+                                             -i "prune_options=${prune_options}" \
                                              -i "kmers_options=${kmers_options}")
         jbors="$jbors -i kmers:array:jobref=${kmers_job}:kmers"
     done
@@ -23,6 +24,7 @@ main() {
     # schedule gcsa job
     gcsajob=$(dx-jobutil-new-job gcsa -i "vg_tar=${vg_tar}" -i "vg_tar_prefix=${vg_tar_prefix}" \
                                       -i xgjob:string=${xgjob} \
+                                      -i "prune_options=${prune_options}" \
                                       -i "kmers_options=${kmers_options}" -i "gcsa_options=${gcsa_options}" \
                                       $jbors)
     dx-jobutil-add-output vg_indexed_tar --class=jobref "$gcsajob:vg_indexed_tar" 
@@ -48,11 +50,20 @@ kmers() {
     vg_name=$(dx describe --name "$vg")
     vg_name=${vg_name%.vg}
 
-    dx-jobutil-add-output kmers --class=file \
-        $(dx cat "$vg" \
-            | vg mod -N -t $(nproc) -r "$vg_name" - \
-            | vg kmers -gB -t $(nproc) -H 1000000000 -T 1000000001 $kmers_options - \
-            | dx upload --destination "${vg_name}.kmers" --brief -)
+    dx download "$vg"
+    vg mod -p $prune_options -t $(nproc) *.vg | vg mod -S -l 32 -t $(nproc) - > /tmp/pruned.vg
+    vg mod -N -t $(nproc) -r "$vg_name" *.vg >> /tmp/pruned.vg
+
+    # run the pipeline in kmers_inner while filtering stderr for some expected warnings
+    # (arising from partial duplication of the reference path created above)
+    ans=$(kmers_inner "$kmers_options" "$vg_name" 2> >(grep -v 'appears multiple times' 1>&2))
+    dx-jobutil-add-output kmers --class=file "$ans"
+}
+
+kmers_inner() {
+    vg view -v /tmp/pruned.vg \
+        | vg kmers -gB -t $(nproc) -H 1000000000 -T 1000000001 $1 - \
+        | dx upload --destination "$2.kmers" --brief -
 }
 
 gcsa() {
@@ -79,9 +90,10 @@ gcsa() {
     # tar everything up and output
     wait $vgpid
     wait $xgpid
-    index_options_alnum=$(echo "${kmers_options}${gcsa_options}" | tr -cd '[[:alnum:]]')
+    index_options_alnum=$(echo "${prune_options}${kmers_options}${gcsa_options}" | tr -cd '[[:alnum:]]')
     vg_indexed_tar=$(tar cv vg | \
                        dx upload --destination "${vg_tar_prefix}.vg.index_${index_options_alnum}.tar" \
+                         --property "prune_options=${prune_options}" \
                          --property "kmers_options=${kmers_options}" \
                          --property "gcsa_options=${gcsa_options}" \
                          --type vg_indexed_tar --brief -)

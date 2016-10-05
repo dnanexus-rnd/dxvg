@@ -17,9 +17,9 @@
       "patterns": ["*.gam"]
     },
     {
-      "name": "call_opts",
+      "name": "filter_opts",
       "class": "string",
-      "default": "-r 0.0001 -b 0.4 -f 0.25 -d 10 -s 10"
+      "default": "-D 40 -c 999"
     },
     {
       "name": "chromosome",
@@ -32,11 +32,6 @@
     {
       "name": "sample_name",
       "class": "string"
-    },
-    {
-      "name": "glenn2vcf",
-      "class": "file",
-      "default": {"$dnanexus_link": "file-BvJQ0Z00QpJ5GjzbkbPGV4J2"}
     }
   ],
   "outputSpec": [

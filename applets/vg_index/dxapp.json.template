@@ -13,6 +13,11 @@
       "patterns": ["*.vg.tar"]
     },
     {
+      "name": "prune_options",
+      "class": "string",
+      "default": "-l 16 -e 3"
+    },
+    {
       "name": "kmers_options",
       "class": "string",
       "default": "-k 16"
@@ -20,7 +25,7 @@
     {
       "name": "gcsa_options",
       "class": "string",
-      "default": "-Z 1500 -X 2"
+      "default": "-Z 1500 -X 3"
     }
   ],
   "outputSpec": [
@@ -49,7 +54,7 @@
         "instanceType": "mem3_ssd1_x32"
       },
       "kmers": {
-        "instanceType": "mem3_ssd1_x8"
+        "instanceType": "mem3_ssd1_x16"
       },
       "gcsa": {
         "instanceType": "dx_i2.8xlarge"
