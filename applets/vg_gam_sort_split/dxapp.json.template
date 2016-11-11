@@ -1,0 +1,69 @@
+{
+  "name": "vg_gam_sort_split",
+  "title": "vg_gam_sort_split",
+  "summary": "vg_gam_sort_split",
+  "dxapi": "1.0.0",
+  "version": "0.0.1",
+  "inputSpec": [
+    {
+      "name": "vg_indexed_tar",
+      "class": "file",
+      "optional": false,
+      "type": "vg_indexed_tar"
+    },
+    {
+      "name": "gam",
+      "class": "array:file",
+      "patterns": ["*.gam"],
+      "help": "input unsorted GAM(s) to combine, sort, and index"
+    },
+    {
+      "name": "ranges",
+      "class": "array:string",
+      "optional": true,
+      "help": "SEQ:LO-HI ranges of which to generate sorted GAMs from the index (one-based inclusive)"
+    },
+    {
+      "name": "output_prefix",
+      "class": "string",
+      "optional": true
+    }
+  ],
+  "outputSpec": [
+    {
+      "name": "alignment_index",
+      "class": "file",
+      "patterns": ["*.gam.db.tar"]
+    },
+    {
+      "name": "sorted_gams",
+      "class": "array:file",
+      "patterns": ["*.gam"]
+    }
+  ],
+  "runSpec": {
+    "interpreter": "bash",
+    "file": "src/code.sh",
+    "execDepends": [
+      {"name": "libjansson4"},
+      {"name": "parallel"}
+    ],
+    "bundledDepends": [
+      {
+        "name": "vg_bundle.tar.gz",
+        "id": {"$dnanexus_link": "VG_BUNDLE_DXID"}
+      }
+    ],
+    "systemRequirements": {
+      "main": {
+        "instanceType": "mem3_ssd2_x16"
+      }
+    },
+    "distribution": "Ubuntu",
+    "release": "14.04"
+  },
+  "access": {
+    "network": ["*"]
+  },
+  "authorizedUsers": []
+}
