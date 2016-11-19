@@ -32,7 +32,7 @@ process() {
     wait
 
     # construct graph
-    vg construct -R "$reference_contig" -r reference_genome.fa -v variants.vcf.gz -t $(nproc) $construct_options > "${reference_contig}.vg"
+    vg construct --region "$reference_contig" --region-is-chrom -r reference_genome.fa -v variants.vcf.gz -t $(nproc) $construct_options > "${reference_contig}.vg"
 
     # output to temp space
     dx-jobutil-add-output vg --class=file \
