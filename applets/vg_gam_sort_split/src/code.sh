@@ -20,9 +20,12 @@ main() {
     tar c "${output_prefix}.gam.db" \
         | dx upload --destination "${output_prefix}.gam.db.tar" --brief - \
         > /tmp/GAMDBTAR_DXID & gamdbtar_pid=$!
+    dxid=$(dx upload --destination "${output_prefix}.rocksdb.log" --brief "${output_prefix}.gam.db/LOG")
+    dx-jobutil-add-output rocksdb_log "$dxid"
 
     # generate desired sorted GAMs from the database
     export -f process_range
+    export -f vg_pos2id
     export SHELL=/bin/bash
     if [ "${#ranges[@]}" -gt "0" ]; then
         parallel --verbose process_range "$output_prefix" ::: "${ranges[@]}" \
@@ -47,13 +50,22 @@ process_range() {
     hi=$(echo -n "$range_tsv" | cut -f3)
 
     # resolve the start and end node IDs in the graph.
-    # vg find -p range offsets are 0-based inclusive.
-    lo0=$(( lo - 1 ))
-    hi0=$(( hi - 1 ))
-    node_start=$(vg find -x vg/index.xg -p "${path}:${lo0}-${lo0}" | vg mod -o - | vg view -j - | jq .node[0].id)
-    node_end=$(vg find -x vg/index.xg -p "${path}:${hi0}-${hi0}" | vg mod -o - | vg view -j - | jq .node[0].id)
+    node_start=$(vg_pos2id "$path" "$lo")
+    node_end=$(vg_pos2id "$path" "$hi")
 
     # generate gam from database; stream-upload and emit id to standard output
     vg find -d "${output_prefix}.gam.db" -i "${node_start}:${node_end}" \
         | dx upload --destination "${output_prefix}.${path}_${lo}_${hi}.${node_start}_${node_end}.gam" --brief -
+}
+
+# resolve a one-based position to a node ID
+vg_pos2id() {
+    path="$1"
+    pos="$2"
+    # vg find -p range offsets are 0-based
+    pos=$(( pos - 1))
+    # serialize this because `vg find` uses a lot of memory
+    # for the xg index
+    touch /var/lock/vg_find
+    flock /var/lock/vg_find vg find -x vg/index.xg -p "${path}:${pos}-${pos}" | vg mod -o - | vg view -j - | jq .node[0].id
 }

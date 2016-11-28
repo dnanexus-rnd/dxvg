@@ -36,6 +36,10 @@
       "patterns": ["*.gam.db.tar"]
     },
     {
+      "name": "rocksdb_log",
+      "class": "file"
+    },
+    {
       "name": "sorted_gams",
       "class": "array:file",
       "patterns": ["*.gam"]
