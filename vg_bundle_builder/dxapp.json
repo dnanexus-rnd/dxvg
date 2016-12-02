@@ -46,7 +46,8 @@
       {"name": "flex"},
       {"name": "raptor2-utils"},
       {"name": "rasqal-utils"},
-      {"name": "rs"}
+      {"name": "rs"},
+      {"name": "libgoogle-perftools-dev"}
     ],
     "systemRequirements": {
       "main": {
