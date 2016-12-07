@@ -19,7 +19,7 @@
     {
       "name": "filter_opts",
       "class": "string",
-      "default": "-D 40 -c 999"
+      "default": "-D 40"
     },
     {
       "name": "chromosome",
