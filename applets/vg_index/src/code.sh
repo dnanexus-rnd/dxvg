@@ -51,8 +51,9 @@ kmers() {
     vg_name=${vg_name%.vg}
 
     dx download "$vg"
-    vg mod -p $prune_options -t $(nproc) *.vg | vg mod -S -l 32 -t $(nproc) - > /tmp/pruned.vg
-    vg mod -N -t $(nproc) -r "$vg_name" *.vg >> /tmp/pruned.vg
+    vg mod -t $(( `nproc` / 2 )) -N *.vg > /tmp/ref.vg & ref_pid=$!
+    vg mod -p $prune_options -t $(( `nproc` / 2 )) *.vg > /tmp/pruned.vg
+    wait $ref_pid
 
     # run the pipeline in kmers_inner while filtering stderr for some expected warnings
     # (arising from partial duplication of the reference path created above)
@@ -61,7 +62,8 @@ kmers() {
 }
 
 kmers_inner() {
-    vg view -v /tmp/pruned.vg \
+    set -ex -o pipefail
+    cat /tmp/ref.vg /tmp/pruned.vg | vg view -v - \
         | vg kmers -gB -t $(nproc) -H 1000000000 -T 1000000001 $1 - \
         | dx upload --destination "$2.kmers" --brief -
 }
