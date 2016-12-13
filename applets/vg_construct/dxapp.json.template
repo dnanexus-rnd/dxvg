@@ -30,7 +30,7 @@
     {
       "name": "construct_options",
       "class": "string",
-      "default": "-m 50"
+      "default": "-m 32"
     },
     {
       "name": "output_name",
