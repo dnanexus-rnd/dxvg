@@ -24,7 +24,7 @@
     {
       "name": "reference_variants",
       "class": "file",
-      "optional": false,
+      "optional": true,
       "patterns": ["*.vcf.gz"]
     },
     {
@@ -51,7 +51,8 @@
     "file": "src/code.sh",
     "execDepends": [
       {"name": "libjansson4"},
-      {"name": "parallel"}
+      {"name": "parallel"},
+      {"name": "samtools"}
     ],
     "bundledDepends": [
       {

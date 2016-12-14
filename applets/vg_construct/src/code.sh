@@ -4,24 +4,27 @@ main() {
     set -ex -o pipefail
 
     # fetch reference data
-    dx cat "$reference_genome" | zcat > reference_genome.fa &
-    dx download "$reference_variants" -o variants.vcf.gz
-    tabix variants.vcf.gz
-    wait
+    stage_reference_genome "$reference_genome" & srgpid=$!
+    variants_arg=""
+    if [ -n "$reference_variants" ]; then
+        dx download "$reference_variants" -o variants.vcf.gz
+        tabix variants.vcf.gz
+        variants_arg='-v variants.vcf.gz'
+    else
+        echo "Constructing graph from reference genome only!!!"
+    fi
+    wait $srgpid
 
     # construct graphs
     mkdir vg
-    pushd vg
-    export -f construct_contig
-    export SHELL=/bin/bash
-    printf '%s\n' ${reference_contigs[@]} | parallel -j `nproc` construct_contig {}
-    ls -lh *.vg
+    printf '%s\n' ${reference_contigs[@]} | SHELL=/bin/bash parallel -t -j `nproc` \
+        vg construct -r reference_genome.fa $variants_arg --region '{}' --region-is-chrom -t 1 $construct_options '>' 'vg/{}.vg'
+    ls -lh vg/
 
     # rewrite IDs
-    vg ids -j $(ls -1 *.vg)
+    vg ids -j $(ls -1 vg/*.vg)
 
     # tar up and output
-    popd
     if [ -z "$output_name" ]; then
         output_name="$reference_genome_prefix"
     fi
@@ -29,9 +32,9 @@ main() {
     dx-jobutil-add-output vg_tar "$vg_tar" --class=file
 }
 
-construct_contig() {
+stage_reference_genome() {
     set -ex -o pipefail
-    vg construct -r ../reference_genome.fa -v ../variants.vcf.gz \
-        --region "$1" --region-is-chrom \
-        -t 1 $construct_options > "$1.vg"
+    # ignore nonzero exit status due to maddening "trailing garbage" in hs37d5.fa.gz
+    (dx cat "$1" | zcat > reference_genome.fa) || true
+    samtools faidx reference_genome.fa
 }
