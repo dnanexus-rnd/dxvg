@@ -25,7 +25,7 @@
     {
       "name": "gcsa_options",
       "class": "string",
-      "default": "-Z 1500 -X 2"
+      "default": "-Z 6000 -X 3"
     }
   ],
   "outputSpec": [
