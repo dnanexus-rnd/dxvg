@@ -22,7 +22,7 @@ main() {
     ls -lh vg/
 
     # rewrite IDs
-    vg ids -j $(ls -1 vg/*.vg)
+    vg ids -j $(ls -1 vg/*.vg | sort -V)
 
     # tar up and output
     if [ -z "$output_name" ]; then
