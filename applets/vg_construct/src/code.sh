@@ -35,7 +35,7 @@ main() {
     # create ref-only versions
     mv vg/ var_vg/
     mkdir vg
-    printf '%s\n' ${reference_contigs[@]} | parallel -t -j `nproc` vg mod -N 'var_vg/{}.vg' '>' 'vg/{}.ref.vg'
+    printf '%s\n' ${reference_contigs[@]} | parallel -t -j 4 vg mod -N 'var_vg/{}.vg' '>' 'vg/{}.ref.vg'
 
     ref_vg_tar=$(tar cv vg | dx upload --destination "${output_name}.ref.vg.tar" --type vg_tar --brief -)
     dx-jobutil-add-output ref_vg_tar "$ref_vg_tar" --class=file
