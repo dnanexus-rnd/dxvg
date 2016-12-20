@@ -14,7 +14,6 @@ main() {
         vg_map_jobs+=($(dx run $(dx-jobutil-parse-link --no-project "$vg_map") \
                                -i reads="${reads[$i]}" \
                                -i reads2="${reads2[$i]}" \
-                               -i map_options="-M 2 -W 1000 -u 0 -U -n 5" \
                                -i vg_indexed_tar="$vg_indexed_tar" \
                                --name "map shard $(expr $i + 1)" \
                                -y --brief))
