@@ -66,6 +66,7 @@ def run_test_analyses(project, folder, workflow, find_test_data):
     stage_instance_types = {
         "construct": "mem3_ssd1_x8",
         "index": "mem3_ssd1_x8",
+        "index_ref": "mem3_ssd1_x8",
         "map": "mem3_ssd1_x8"
     }
 

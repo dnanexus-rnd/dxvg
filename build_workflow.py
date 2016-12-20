@@ -134,11 +134,22 @@ def build_workflow(project, folder, find_applet, find_asset):
         }
         index_stage_id = wf.add_stage(find_applet("vg_index"), stage_input=index_input, name="index")
 
+        index_ref_input = {
+            "vg_tar": dxpy.dxlink({"stage": construct_stage_id, "outputField": "ref_vg_tar"})
+        }
+        index_ref_stage_id = wf.add_stage(find_applet("vg_index"), stage_input=index_ref_input, name="index_ref")
+
         if incl_map:
             map_input = {
                 "vg_indexed_tar": dxpy.dxlink({"stage": index_stage_id, "outputField": "vg_indexed_tar"})
             }
             map_stage_id = wf.add_stage(find_applet("vg_map"), stage_input=map_input, name="map")
+
+            map_ref_input = {
+                "vg_indexed_tar": dxpy.dxlink({"stage": index_ref_stage_id, "outputField": "vg_indexed_tar"}),
+                "reads": dxpy.dxlink({"stage": map_stage_id, "inputField": "reads"})
+            }
+            map_ref_stage_id = wf.add_stage(find_applet("vg_map"), stage_input=map_ref_input, name="map_ref")
 
         return wf
 

@@ -2,6 +2,7 @@
 
 main() {
     set -ex -o pipefail
+    export SHELL=/bin/bash
 
     # fetch reference data
     stage_reference_genome "$reference_genome" & srgpid=$!
@@ -17,7 +18,7 @@ main() {
 
     # construct graphs
     mkdir vg
-    printf '%s\n' ${reference_contigs[@]} | SHELL=/bin/bash parallel -t -j `nproc` \
+    printf '%s\n' ${reference_contigs[@]} | parallel -t -j `nproc` \
         vg construct -r reference_genome.fa $variants_arg --region '{}' --region-is-chrom -t 1 $construct_options '>' 'vg/{}.vg'
     ls -lh vg/
 
@@ -30,6 +31,14 @@ main() {
     fi
     vg_tar=$(tar cv vg | dx upload --destination "${output_name}.vg.tar" --type vg_tar --brief -)
     dx-jobutil-add-output vg_tar "$vg_tar" --class=file
+
+    # create ref-only versions
+    mv vg/ var_vg/
+    mkdir vg
+    printf '%s\n' ${reference_contigs[@]} | parallel -t -j `nproc` vg mod -N 'var_vg/{}.vg' '>' 'vg/{}.ref.vg'
+
+    ref_vg_tar=$(tar cv vg | dx upload --destination "${output_name}.ref.vg.tar" --type vg_tar --brief -)
+    dx-jobutil-add-output ref_vg_tar "$ref_vg_tar" --class=file
 }
 
 stage_reference_genome() {

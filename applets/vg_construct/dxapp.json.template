@@ -43,7 +43,15 @@
       "name": "vg_tar",
       "class": "file",
       "type": "vg_tar",
-      "patterns": ["*.vg.tar"]
+      "patterns": ["*.vg.tar"],
+      "help": "tar archive with one graph .vg file per reference contig"
+    },
+    {
+      "name": "ref_vg_tar",
+      "class": "file",
+      "type": "vg_tar",
+      "patterns": ["*.vg.tar"],
+      "help": "tar containing graphs with reference contig paths only (with the same node IDs as vg_tar)"
     }
   ],
   "runSpec": {
