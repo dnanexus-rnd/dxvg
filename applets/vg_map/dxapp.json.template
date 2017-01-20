@@ -25,7 +25,7 @@
     {
       "name": "map_options",
       "class": "string",
-      "default": "-S 0 -u 1 -m 1"
+      "default": ""
     }
   ],
   "outputSpec": [
