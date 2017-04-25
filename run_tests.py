@@ -56,7 +56,7 @@ def run_test_analyses(project, folder, workflow, find_test_data):
         "21+Y": {
             "construct.reference_genome": dxpy.dxlink(find_test_data("hs37d5.fa.gz").get_id()),
             "construct.reference_variants": dxpy.dxlink(find_test_data("ALL.wgs.phase3_shapeit2_mvncall_integrated_v5a.20130502.sites.vcf.gz").get_id()),
-            "construct.reference_contigs": ["21", "Y"],
+            "construct.reference_contigs": ["21", "Y", "MT", "GL000207.1", "NC_007605", "hs37d5"],
             "map.reads": dxpy.dxlink(find_test_data("HS1011_unitigs_Y.fastq.gz").get_id())
         }
     }
