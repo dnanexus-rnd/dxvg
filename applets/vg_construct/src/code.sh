@@ -23,7 +23,7 @@ main() {
     ls -lh vg/
 
     # rewrite IDs
-    vg ids -j $(ls -1 vg/*.vg | sort -V)
+    printf 'vg/%s.vg\n' ${reference_contigs[@]} | xargs -n 9999 -t vg ids -j
 
     # tar up and output
     if [ -z "$output_name" ]; then
