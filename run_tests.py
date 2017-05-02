@@ -84,7 +84,7 @@ def run_test_analyses(project, folder, workflow, find_test_data):
 def run_wg_build(project, folder, workflow, find_test_data, depends_on):
     wg_input = {
         "construct.reference_genome": dxpy.dxlink(find_test_data("hs37d5.fa.gz").get_id()),
-        "construct.reference_variants": dxpy.dxlink(find_test_data("ALL.wgs.phase3_shapeit2_mvncall_integrated_v5a.20130502.sites.vcf.gz").get_id()),
+        "construct.reference_variants": dxpy.dxlink(find_test_data("ALL.wgs.phase3_shapeit2_mvncall_integrated_v5b.20130502.sites.vcf.gz").get_id()),
         "map.reads": dxpy.dxlink(find_test_data("HS1011.mag.gz").get_id())
     }
 
