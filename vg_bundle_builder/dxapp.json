@@ -39,6 +39,8 @@
       {"name": "libtool"},
       {"name": "libncurses-dev"},
       {"name": "libbz2-dev"},
+      {"name": "liblz4-dev"},
+      {"name": "liblzma-dev"},
       {"name": "cmake"},
       {"name": "libbison-dev"},
       {"name": "bison"},
